@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prediction Result — {{ prediction }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='result.css') }}">
+</head>
+<body>
+  <div class="bg-canvas" aria-hidden="true">
+    <svg class="bg-svg" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <g class="neural-lines" opacity="0.15">
+        <line x1="0"    y1="300" x2="350"  y2="150" stroke="#38bdf8" stroke-width="0.8"/>
+        <line x1="350"  y1="150" x2="700"  y2="400" stroke="#38bdf8" stroke-width="0.8"/>
+        <line x1="700"  y1="400" x2="1050" y2="200" stroke="#38bdf8" stroke-width="0.8"/>
+        <line x1="1050" y1="200" x2="1440" y2="450" stroke="#38bdf8" stroke-width="0.8"/>
+        <line x1="150"  y1="750" x2="500"  y2="550" stroke="#34d399" stroke-width="0.6"/>
+        <line x1="500"  y1="550" x2="900"  y2="700" stroke="#34d399" stroke-width="0.6"/>
+        <line x1="900"  y1="700" x2="1300" y2="600" stroke="#34d399" stroke-width="0.6"/>
+      </g>
+      <g class="neural-nodes" opacity="0.2">
+        <circle cx="350"  cy="150" r="4" fill="#38bdf8"><animate attributeName="r" values="4;6;4" dur="3s" repeatCount="indefinite"/></circle>
+        <circle cx="700"  cy="400" r="5" fill="#38bdf8"><animate attributeName="r" values="5;7;5" dur="2.5s" repeatCount="indefinite"/></circle>
+        <circle cx="1050" cy="200" r="3" fill="#38bdf8"><animate attributeName="r" values="3;5;3" dur="4s" repeatCount="indefinite"/></circle>
+        <circle cx="500"  cy="550" r="4" fill="#34d399"><animate attributeName="r" values="4;6;4" dur="3.5s" repeatCount="indefinite"/></circle>
+        <circle cx="900"  cy="700" r="3" fill="#34d399"><animate attributeName="r" values="3;5;3" dur="2.8s" repeatCount="indefinite"/></circle>
+      </g>
+      <circle r="3" fill="#38bdf8" opacity="0.7">
+        <animateMotion dur="6s" repeatCount="indefinite" path="M0,300 L350,150 L700,400 L1050,200 L1440,450"/>
+        <animate attributeName="opacity" values="0;0.8;0" dur="6s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="2.5" fill="#34d399" opacity="0.7">
+        <animateMotion dur="8s" repeatCount="indefinite" begin="3s" path="M150,750 L500,550 L900,700 L1300,600"/>
+        <animate attributeName="opacity" values="0;0.7;0" dur="8s" repeatCount="indefinite" begin="3s"/>
+      </circle>
+      <g opacity="0.06" transform="translate(40,100)">
+        <path d="M0,0 C40,40 40,80 0,120 C-40,160 -40,200 0,240 C40,280 40,320 0,360 C-40,400 -40,440 0,480" fill="none" stroke="#38bdf8" stroke-width="2"/>
+        <path d="M60,0 C20,40 20,80 60,120 C100,160 100,200 60,240 C20,280 20,320 60,360 C100,400 100,440 60,480" fill="none" stroke="#34d399" stroke-width="2"/>
+        <line x1="0"  y1="60"  x2="60"  y2="60"  stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+        <line x1="-30" y1="120" x2="90" y2="120" stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+        <line x1="0"  y1="180" x2="60"  y2="180" stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+        <line x1="-30" y1="240" x2="90" y2="240" stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+        <line x1="0"  y1="300" x2="60"  y2="300" stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+        <line x1="-30" y1="360" x2="90" y2="360" stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="page-wrapper">
+
+    <div class="page-header">
+      <h2>🧠 Prediction Result</h2>
+    </div>
+
+    <div class="resultBox">
+      <h3>Predicted Disease</h3>
+      <p class="disease" id="disease-name">{{ prediction }}</p>
+
+      <div class="confidence-section">
+        <div class="confidence-text">
+          <span>Model Confidence</span>
+          <strong>{{ confidence }}%</strong>
+        </div>
+        <div class="confidence-bar-track">
+          <div class="confidence-bar-fill" id="conf-bar" style="width: 0%"></div>
+        </div>
+      </div>
+
+      {% if selected_symptoms %}
+      <div class="selected-symptoms-row">
+        <span class="symp-row-label">Symptoms analysed:</span>
+        <div class="symp-pill-row">
+          {% for s in selected_symptoms %}
+          <span class="symp-pill">{{ s }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="info-loading" id="info-loading">
+      <div class="loading-spinner"></div>
+      <span>Fetching real-time medical information…</span>
+    </div>
+
+    <div class="disease-info-wrapper" id="disease-info-wrapper" style="display:none"></div>
+
+    <div class="source-link-wrapper" id="source-link-wrapper" style="display:none">
+      <a class="source-link" id="source-link" href="#" target="_blank" rel="noopener">
+        📖 Read full article on Wikipedia →
+      </a>
+    </div>
+
+    <div class="disclaimer-card">
+      <span class="disclaimer-icon">⚠️</span>
+      <p class="disclaimer-text">
+        This prediction is generated by an AI model and is <strong>not a substitute for professional medical advice</strong>.
+        Always consult a qualified healthcare provider for an accurate diagnosis and treatment plan.
+      </p>
+    </div>
+
+    <div class="back-btn-wrapper">
+      <a href="/"><button>← Check Another Prediction</button></a>
+    </div>
+
+  </div>
+
+  <script src="{{ url_for('static', filename='disease_info.js') }}"></script>
+
+  <script>
+    const DISEASE  = "{{ prediction }}";
+    const CONF_VAL = parseFloat("{{ confidence }}");
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('conf-bar').style.width = Math.min(CONF_VAL, 100) + '%';
+      }, 400);
+    });
+
+    function makeCard(icon, title, content, type = 'text') {
+      const card = document.createElement('div');
+      card.className = 'info-card';
+
+      let bodyHTML = '';
+      if (type === 'list' && Array.isArray(content)) {
+        const items = content.map(i => `<li>${i}</li>`).join('');
+        bodyHTML = `<ul class="info-list">${items}</ul>`;
+      } else if (type === 'checkList' && Array.isArray(content)) {
+        const items = content.map(i => `<li>${i}</li>`).join('');
+        bodyHTML = `<ul class="info-list precaution-list">${items}</ul>`;
+      } else {
+        bodyHTML = `<p class="info-card-body">${content}</p>`;
+      }
+
+      card.innerHTML = `
+        <div class="info-card-header">
+          <div class="info-card-icon">${icon}</div>
+          <span class="info-card-title">${title}</span>
+        </div>
+        ${bodyHTML}
+      `;
+      return card;
+    }
+
+    function renderCards(data, isWiki) {
+      const wrapper = document.getElementById('disease-info-wrapper');
+      wrapper.innerHTML = '';
+
+      if (isWiki) {
+        const badge = document.createElement('div');
+        badge.className = 'data-source-badge';
+        badge.innerHTML = '🌐 Real-time data from Wikipedia';
+        wrapper.appendChild(badge);
+      } else {
+        const badge = document.createElement('div');
+        badge.className = 'data-source-badge local';
+        badge.innerHTML = '📚 Information from local medical database';
+        wrapper.appendChild(badge);
+      }
+
+      if (data.description) {
+        wrapper.appendChild(makeCard('📋', 'About this Condition', data.description, 'text'));
+      }
+
+      const causes = data.causes || [];
+      if (causes.length) {
+        wrapper.appendChild(makeCard('🔬', 'Causes & Risk Factors', causes, 'list'));
+      }
+
+      const symptoms = data.symptoms || [];
+      if (symptoms.length) {
+        wrapper.appendChild(makeCard('🩹', 'Common Symptoms', symptoms, 'list'));
+      }
+
+      const remedies = data.remedies || data.precautions || [];
+      if (remedies.length) {
+        wrapper.appendChild(makeCard('💊', 'Treatment & Remedies', remedies, 'list'));
+      }
+
+      const prevention = data.prevention || [];
+      if (prevention.length) {
+        wrapper.appendChild(makeCard('🛡️', 'Prevention Tips', prevention, 'checkList'));
+      }
+
+      wrapper.style.display = 'flex';
+    }
+
+    function localFallback(diseaseName) {
+      const info = getDiseaseInfo(diseaseName.toLowerCase().trim());
+      return {
+        description: info.description || '',
+        causes:      info.causes     || [],
+        symptoms:    info.symptoms   || [],
+        remedies:    info.precautions || [],
+        prevention:  info.prevention || [],
+      };
+    }
+
+    async function loadDiseaseInfo() {
+      const loadingEl = document.getElementById('info-loading');
+      const srcWrapper = document.getElementById('source-link-wrapper');
+
+      try {
+        const res  = await fetch(`/disease-info?disease=${encodeURIComponent(DISEASE)}`);
+        const data = await res.json();
+
+        loadingEl.style.display = 'none';
+
+        if (data && data.description && data.description.length > 40) {
+          renderCards(data, true);
+
+          if (data.source) {
+            document.getElementById('source-link').href = data.source;
+            srcWrapper.style.display = 'block';
+          }
+        } else {
+          renderCards(localFallback(DISEASE), false);
+        }
+      } catch (_) {
+        loadingEl.style.display = 'none';
+        renderCards(localFallback(DISEASE), false);
+      }
+    }
+
+    loadDiseaseInfo();
+  </script>
+
+</body>
+</html>

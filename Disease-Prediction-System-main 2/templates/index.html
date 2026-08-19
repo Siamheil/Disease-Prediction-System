@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disease Prediction System</title>
+  <link href="{{ url_for('static', filename='index.css') }}" rel="stylesheet">
+</head>
+<body>
+  <div class="bg-canvas" aria-hidden="true">
+    <svg class="bg-svg" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <g class="neural-lines" opacity="0.18">
+        <line x1="100" y1="450" x2="400" y2="200" stroke="#38bdf8" stroke-width="0.8"/>
+        <line x1="400" y1="200" x2="720" y2="350" stroke="#38bdf8" stroke-width="0.8"/>
+        <line x1="720" y1="350" x2="1000" y2="180" stroke="#38bdf8" stroke-width="0.8"/>
+        <line x1="1000" y1="180" x2="1340" y2="400" stroke="#38bdf8" stroke-width="0.8"/>
+        <line x1="200" y1="700" x2="550" y2="500" stroke="#34d399" stroke-width="0.6"/>
+        <line x1="550" y1="500" x2="850" y2="650" stroke="#34d399" stroke-width="0.6"/>
+        <line x1="850" y1="650" x2="1200" y2="550" stroke="#34d399" stroke-width="0.6"/>
+        <line x1="300" y1="100" x2="600" y2="380" stroke="#818cf8" stroke-width="0.5"/>
+        <line x1="600" y1="380" x2="900" y2="250" stroke="#818cf8" stroke-width="0.5"/>
+        <line x1="900" y1="250" x2="1300" y2="700" stroke="#818cf8" stroke-width="0.5"/>
+      </g>
+
+      <g class="neural-nodes" opacity="0.22">
+        <circle cx="100"  cy="450" r="4" fill="#38bdf8"><animate attributeName="r" values="4;6;4" dur="3s" repeatCount="indefinite"/></circle>
+        <circle cx="400"  cy="200" r="3" fill="#38bdf8"><animate attributeName="r" values="3;5;3" dur="4s" repeatCount="indefinite"/></circle>
+        <circle cx="720"  cy="350" r="5" fill="#38bdf8"><animate attributeName="r" values="5;7;5" dur="2.5s" repeatCount="indefinite"/></circle>
+        <circle cx="1000" cy="180" r="3" fill="#38bdf8"><animate attributeName="r" values="3;5;3" dur="3.5s" repeatCount="indefinite"/></circle>
+        <circle cx="1340" cy="400" r="4" fill="#38bdf8"><animate attributeName="r" values="4;6;4" dur="2.8s" repeatCount="indefinite"/></circle>
+        <circle cx="550"  cy="500" r="4" fill="#34d399"><animate attributeName="r" values="4;6;4" dur="3.2s" repeatCount="indefinite"/></circle>
+        <circle cx="850"  cy="650" r="3" fill="#34d399"><animate attributeName="r" values="3;5;3" dur="4.5s" repeatCount="indefinite"/></circle>
+        <circle cx="600"  cy="380" r="5" fill="#818cf8"><animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite"/></circle>
+        <circle cx="900"  cy="250" r="3" fill="#818cf8"><animate attributeName="r" values="3;5;3" dur="3.8s" repeatCount="indefinite"/></circle>
+      </g>
+
+      <circle r="3" fill="#38bdf8" opacity="0.7">
+        <animateMotion dur="5s" repeatCount="indefinite" path="M100,450 L400,200 L720,350 L1000,180 L1340,400"/>
+        <animate attributeName="opacity" values="0;0.8;0" dur="5s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="2.5" fill="#34d399" opacity="0.7">
+        <animateMotion dur="7s" repeatCount="indefinite" begin="2s" path="M200,700 L550,500 L850,650 L1200,550"/>
+        <animate attributeName="opacity" values="0;0.7;0" dur="7s" repeatCount="indefinite" begin="2s"/>
+      </circle>
+      <circle r="2" fill="#818cf8" opacity="0.6">
+        <animateMotion dur="6s" repeatCount="indefinite" begin="1s" path="M300,100 L600,380 L900,250 L1300,700"/>
+        <animate attributeName="opacity" values="0;0.6;0" dur="6s" repeatCount="indefinite" begin="1s"/>
+      </circle>
+
+      <g opacity="0.04" fill="none" stroke="#38bdf8" stroke-width="1.5" transform="translate(620,60) scale(0.85)">
+        <ellipse cx="100" cy="55" rx="38" ry="45"/>
+        <path d="M62,98 C30,130 18,200 20,280 L180,280 C182,200 170,130 138,98 Z"/>
+        <path d="M20,130 C-20,160 -30,220 -10,260" stroke-width="22" stroke-linecap="round"/>
+        <path d="M180,130 C220,160 230,220 210,260" stroke-width="22" stroke-linecap="round"/>
+        <path d="M60,278 C50,340 45,400 48,460" stroke-width="26" stroke-linecap="round"/>
+        <path d="M140,278 C150,340 155,400 152,460" stroke-width="26" stroke-linecap="round"/>
+        <polyline points="60,185 75,185 82,165 92,205 100,175 108,195 118,185 140,185" stroke="#38bdf8" stroke-width="2" opacity="0.6">
+          <animate attributeName="opacity" values="0.2;0.8;0.2" dur="1.2s" repeatCount="indefinite"/>
+        </polyline>
+      </g>
+
+      <g opacity="0.07" transform="translate(1280,100)">
+        <path d="M0,0 C40,40 40,80 0,120 C-40,160 -40,200 0,240 C40,280 40,320 0,360 C-40,400 -40,440 0,480" fill="none" stroke="#38bdf8" stroke-width="2"/>
+        <path d="M60,0 C20,40 20,80 60,120 C100,160 100,200 60,240 C20,280 20,320 60,360 C100,400 100,440 60,480" fill="none" stroke="#34d399" stroke-width="2"/>
+        <line x1="0"  y1="60"  x2="60"  y2="60"  stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+        <line x1="-30" y1="120" x2="90" y2="120" stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+        <line x1="0"  y1="180" x2="60"  y2="180" stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+        <line x1="-30" y1="240" x2="90" y2="240" stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+        <line x1="0"  y1="300" x2="60"  y2="300" stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+        <line x1="-30" y1="360" x2="90" y2="360" stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+        <line x1="0"  y1="420" x2="60"  y2="420" stroke="#38bdf8" stroke-width="1" opacity="0.5"/>
+      </g>
+
+      <g class="medical-crosses" fill="#38bdf8" opacity="0.06">
+        <rect x="60"  y="80"  width="6" height="20" rx="2"/><rect x="54"  y="86"  width="18" height="8" rx="2"/>
+        <rect x="1350" y="200" width="5" height="16" rx="1"/><rect x="1345" y="205" width="15" height="6" rx="1"/>
+        <rect x="200" y="780" width="5" height="16" rx="1"/><rect x="195" y="785" width="15" height="6" rx="1"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="bg-deco" aria-hidden="true">⚕</div>
+  <div class="bg-deco" aria-hidden="true">✚</div>
+  <div class="bg-deco" aria-hidden="true">⚕</div>
+
+  <div class="container">
+
+    <div class="header">
+      <span class="header-icon">🩺</span>
+      <h1>Disease Prediction System</h1>
+      <p class="subtitle">AI-powered symptom analysis using neural network</p>
+    </div>
+
+    <form action="/result" method="post" class="container" id="symptom-form">
+
+      <div class="tags-section" id="tags-section">
+        <div class="tags-label" id="tags-label">Selected Symptoms</div>
+        <div id="tags-container"></div>
+      </div>
+
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          id="symptom-search"
+          placeholder="Search symptoms…"
+          autocomplete="off"
+          spellcheck="false"
+        >
+        <span class="search-count" id="search-count"></span>
+      </div>
+
+      <span id="symptom-list">
+        {% for symptom in symptoms %}
+        <label>
+          <input type="checkbox" name="symptoms" value="{{ symptom }}" class="checkbox">
+          {{ symptom }}
+        </label>
+        {% endfor %}
+        <div class="no-results" id="no-results">No symptoms match your search.</div>
+      </span>
+
+      <div class="form-footer">
+        <div class="selected-count">
+          <span id="count-num">0</span> symptom(s) selected
+        </div>
+        <button type="submit" id="submit-btn">Predict Disease</button>
+      </div>
+
+    </form>
+  </div>
+
+  <script>
+    const searchInput   = document.getElementById('symptom-search');
+    const symptomList   = document.getElementById('symptom-list');
+    const labels        = symptomList.querySelectorAll('label');
+    const noResults     = document.getElementById('no-results');
+    const tagsContainer = document.getElementById('tags-container');
+    const tagsLabel     = document.getElementById('tags-label');
+    const countNum      = document.getElementById('count-num');
+    const searchCount   = document.getElementById('search-count');
+    const submitBtn     = document.getElementById('submit-btn');
+
+    searchInput.addEventListener('input', function () {
+      const q = this.value.toLowerCase().trim();
+      let visible = 0;
+      labels.forEach(label => {
+        const text = label.textContent.trim().toLowerCase();
+        const show = !q || text.includes(q);
+        label.classList.toggle('hidden', !show);
+        if (show) visible++;
+      });
+      searchCount.textContent = q ? `${visible} found` : '';
+      noResults.style.display = (visible === 0) ? 'block' : 'none';
+    });
+
+    function syncTags() {
+      const checked = Array.from(symptomList.querySelectorAll('input[type=checkbox]:checked'));
+      countNum.textContent = checked.length;
+      tagsLabel.style.display = checked.length ? 'block' : 'none';
+
+      submitBtn.disabled = checked.length === 0;
+      submitBtn.style.opacity = checked.length === 0 ? '0.5' : '1';
+
+      tagsContainer.innerHTML = '';
+      checked.forEach(input => {
+        const tag = document.createElement('div');
+        tag.className = 'symptom-tag';
+        tag.dataset.value = input.value;
+
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = input.value;
+
+        const removeBtn = document.createElement('span');
+        removeBtn.className = 'tag-remove';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.title = 'Remove';
+        removeBtn.addEventListener('click', () => {
+          input.checked = false;
+          syncTags();
+        });
+
+        tag.appendChild(nameSpan);
+        tag.appendChild(removeBtn);
+        tagsContainer.appendChild(tag);
+      });
+    }
+
+    symptomList.addEventListener('change', syncTags);
+    syncTags();
+  </script>
+
+</body>
+</html>
